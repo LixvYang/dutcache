@@ -10,8 +10,8 @@ import (
 	"sync"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/lixvyang/dutcache/dutcache/consistenthash"
-	pb "github.com/lixvyang/dutcache/dutcache/dutcachepb"
+	"github.com/lixvyang/dutcache/pkg/consistenthash"
+	pb "github.com/lixvyang/dutcache/pkg/dutcachepb"
 )
 
 const defaultBasePath = "/_geecache/"

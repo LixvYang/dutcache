@@ -3,9 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/lixvyang/dutcache/dutcache"
 	"log"
 	"net/http"
+
+	dutcache "github.com/lixvyang/dutcache/pkg"
 )
 
 var db = map[string]string{
@@ -48,7 +49,6 @@ func startAPIServer(apiAddr string, gee *dutcache.Group) {
 		}))
 	log.Println("fontend server is running at", apiAddr)
 	log.Fatal(http.ListenAndServe(apiAddr[7:], nil))
-
 }
 
 func main() {

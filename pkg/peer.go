@@ -1,7 +1,7 @@
 package dutcache
 
 import (
-	pb "github.com/lixvyang/dutcache/dutcache/dutcachepb"
+	pb "github.com/lixvyang/dutcache/pkg/dutcachepb"
 )
 
 // PeerPicker is the interface that must be implemented to locate

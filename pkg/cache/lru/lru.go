@@ -1,6 +1,9 @@
 package lru
 
-import "container/list"
+import (
+	"container/list"
+	"github.com/lixvyang/dutcache/pkg/cache"
+)
 
 // Cache is a LRU cache. It is not safe for concurrent access.
 type Cache struct {
@@ -9,21 +12,16 @@ type Cache struct {
 	ll       *list.List
 	cache    map[string]*list.Element
 	// optional and executed when an entry is purged.
-	OnEvicted func(key string, value Value)
+	OnEvicted func(key string, value cache.Value)
 }
 
 type entry struct {
 	key   string
-	value Value
-}
-
-// Value use Len to count how many bytes it takes
-type Value interface {
-	Len() int
+	value cache.Value
 }
 
 // New is the Constructor of Cache
-func New(maxBytes int64, onEvicted func(string, Value)) *Cache {
+func New(maxBytes int64, onEvicted func(string, cache.Value)) *Cache {
 	return &Cache{
 		maxBytes:  maxBytes,
 		ll:        list.New(),
@@ -32,7 +30,7 @@ func New(maxBytes int64, onEvicted func(string, Value)) *Cache {
 	}
 }
 
-func (c *Cache) Get(key string) (value Value, ok bool) {
+func (c *Cache) Get(key string) (value cache.Value, ok bool) {
 	if ele, ok := c.cache[key]; ok {
 		c.ll.MoveToFront(ele)
 		kv := ele.Value.(*entry)
@@ -56,7 +54,7 @@ func (c *Cache) RemoveOldest() {
 }
 
 // Add adds a value to the cache.
-func (c *Cache) Add(key string, value Value) {
+func (c *Cache) Add(key string, value cache.Value) {
 	if ele, ok := c.cache[key]; ok {
 		c.ll.MoveToFront(ele)
 		kv := ele.Value.(*entry)

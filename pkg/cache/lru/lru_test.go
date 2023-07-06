@@ -3,6 +3,8 @@ package lru
 import (
 	"reflect"
 	"testing"
+
+	"github.com/lixvyang/dutcache/pkg/cache"
 )
 
 type String string
@@ -38,7 +40,7 @@ func TestRemoveoldest(t *testing.T) {
 
 func TestOnEvicted(t *testing.T) {
 	keys := make([]string, 0)
-	callback := func(key string, value Value) {
+	callback := func(key string, value cache.Value) {
 		keys = append(keys, key)
 	}
 	lru := New(int64(10), callback)

@@ -2,11 +2,12 @@ package dutcache
 
 import (
 	"fmt"
-	"github.com/lixvyang/dutcache/dutcache/singleflight"
 	"log"
 	"sync"
 
-	pb "github.com/lixvyang/dutcache/dutcache/dutcachepb"
+	"github.com/lixvyang/dutcache/pkg/singleflight"
+
+	pb "github.com/lixvyang/dutcache/pkg/dutcachepb"
 )
 
 // A Getter loads data for a key.
