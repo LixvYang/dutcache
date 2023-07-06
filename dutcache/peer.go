@@ -1,5 +1,9 @@
 package dutcache
 
+import (
+	pb "github.com/lixvyang/dutcache/dutcache/dutcachepb"
+)
+
 // PeerPicker is the interface that must be implemented to locate
 // the peer that owns a specific key.
 type PeerPicker interface {
@@ -8,5 +12,5 @@ type PeerPicker interface {
 
 // PeerGetter is the interface that must be implemented by a peer.
 type PeerGetter interface {
-	Get(group string, key string) ([]byte, error)
+	Get(in *pb.Request, out *pb.Response) error
 }
