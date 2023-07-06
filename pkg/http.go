@@ -9,13 +9,15 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/golang/protobuf/proto"
 	"github.com/lixvyang/dutcache/pkg/consistenthash"
 	pb "github.com/lixvyang/dutcache/pkg/dutcachepb"
+	"google.golang.org/protobuf/proto"
 )
 
-const defaultBasePath = "/_geecache/"
-const defaultReplicas = 50
+const (
+	defaultBasePath = "/_geecache/"
+	defaultReplicas = 50
+)
 
 // HTTPPool implements PeerPicker for a pool of HTTP peers.
 type HTTPPool struct {
@@ -34,31 +36,6 @@ func NewHTTPPool(self string) *HTTPPool {
 		basePath: defaultBasePath,
 	}
 }
-
-// Set updates the pool's list of peers.
-func (p *HTTPPool) Set(peers ...string) {
-	p.mu.Lock()
-	defer p.mu.Unlock()
-	p.peers = consistenthash.New(defaultReplicas, nil)
-	p.peers.Add(peers...)
-	p.httpGetters = make(map[string]*httpGetter, len(peers))
-	for _, peer := range peers {
-		p.httpGetters[peer] = &httpGetter{baseURL: peer + p.basePath}
-	}
-}
-
-// PickPeer picks a peer according to key
-func (p *HTTPPool) PickPeer(key string) (PeerGetter, bool) {
-	p.mu.Lock()
-	defer p.mu.Unlock()
-	if peer := p.peers.Get(key); peer != "" && peer != p.self {
-		p.Log("Pick peer %s", peer)
-		return p.httpGetters[peer], true
-	}
-	return nil, false
-}
-
-var _ PeerPicker = (*HTTPPool)(nil)
 
 // Log info with server name
 func (p *HTTPPool) Log(format string, v ...interface{}) {
@@ -93,18 +70,41 @@ func (p *HTTPPool) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/octet-stream")
-	w.Write(view.ByteSlice())
-	// ...
 	// Write the value to the response body as a proto message.
 	body, err := proto.Marshal(&pb.Response{Value: view.ByteSlice()})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
 	w.Header().Set("Content-Type", "application/octet-stream")
 	w.Write(body)
 }
+
+// Set updates the pool's list of peers.
+func (p *HTTPPool) Set(peers ...string) {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	p.peers = consistenthash.New(defaultReplicas, nil)
+	p.peers.Add(peers...)
+	p.httpGetters = make(map[string]*httpGetter, len(peers))
+	for _, peer := range peers {
+		p.httpGetters[peer] = &httpGetter{baseURL: peer + p.basePath}
+	}
+}
+
+// PickPeer picks a peer according to key
+func (p *HTTPPool) PickPeer(key string) (PeerGetter, bool) {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	if peer := p.peers.Get(key); peer != "" && peer != p.self {
+		p.Log("Pick peer %s", peer)
+		return p.httpGetters[peer], true
+	}
+	return nil, false
+}
+
+var _ PeerPicker = (*HTTPPool)(nil)
 
 type httpGetter struct {
 	baseURL string

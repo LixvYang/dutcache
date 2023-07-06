@@ -3,8 +3,8 @@ package dutcache
 import (
 	"sync"
 
-	c "github.com/lixvyang/dutcache/pkg/cache"
-	"github.com/lixvyang/dutcache/pkg/cache/lfu"
+	c "github.com/lixvyang/dutcache/pkg/cachestruct"
+	"github.com/lixvyang/dutcache/pkg/cachestruct/lfu"
 )
 
 type cache struct {

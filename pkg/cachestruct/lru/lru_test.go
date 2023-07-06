@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/lixvyang/dutcache/pkg/cache"
+	"github.com/lixvyang/dutcache/pkg/cachestruct"
 )
 
 type String string

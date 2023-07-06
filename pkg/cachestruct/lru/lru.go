@@ -2,7 +2,7 @@ package lru
 
 import (
 	"container/list"
-	"github.com/lixvyang/dutcache/pkg/cache"
+	"github.com/lixvyang/dutcache/pkg/cachestruct"
 )
 
 // Cache is a LRU cache. It is not safe for concurrent access.

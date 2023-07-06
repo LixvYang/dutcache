@@ -3,7 +3,7 @@ package lfu
 import (
 	"container/heap"
 
-	"github.com/lixvyang/dutcache/pkg/cache"
+	"github.com/lixvyang/dutcache/pkg/cachestruct"
 )
 
 // Cache is an LFU cache. It is not safe for concurrent access.
