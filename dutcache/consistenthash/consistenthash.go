@@ -1,7 +1,6 @@
 package consistenthash
 
 import (
-	"fmt"
 	"hash/crc32"
 	"sort"
 	"strconv"
@@ -41,9 +40,6 @@ func (m *Map) Add(keys ...string) {
 		}
 	}
 	sort.Ints(m.keys)
-	fmt.Println(len(m.keys))
-	fmt.Println(m.keys)
-	fmt.Println(m.hashMap)
 }
 
 // Get gets the closest item in the hash to the provided key.
